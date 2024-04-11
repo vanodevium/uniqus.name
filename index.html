@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Unique name generator | uniqus.name</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    >
+    <style>
+        * {
+            touch-action: manipulation;
+        }
+
+        html {
+            overflow: hidden;
+        }
+
+        html, body, .container {
+            height: 100%;
+        }
+
+        #unique-name {
+            font-size: 48px;
+            white-space: nowrap;
+        }
+
+        .section-footer {
+            padding: 3rem 1.5rem 6rem;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #unique-name {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container is-flex is-flex-direction-column is-justify-content-space-between">
+    <section class="has-text-centered is-flex is-align-items-center is-justify-content-center m-auto">
+        <div>
+            <p id="unique-name" class="title is-clickable is-unselectable"></p>
+            <br />
+            <p class="subtitle">Click on text to copy</p>
+        </div>
+    </section>
+    <section class="section section-footer">
+        <div class="content has-text-centered">
+            <div class="control">
+                <button id="generate" class="button is-link is-large">Generate</button>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/es-module-shims@latest/dist/es-module-shims.min.js"></script>
+<script type="importmap">
+    {
+        "imports": {
+            "unique-names-generator": "https://cdn.jsdelivr.net/npm/unique-names-generator@latest/dist/index.m.js"
+        }
+    }
+</script>
+<script type="module">
+    import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+
+    const generateName = (len = 2, separator = '-') => {
+        return uniqueNamesGenerator({
+            dictionaries: [adjectives, /*colors,*/ animals],
+            separator: separator,
+            length: len,
+        })
+    }
+
+    const UniqueNameElement = document.getElementById('unique-name');
+    const GenerateButton = document.getElementById('generate');
+
+    GenerateButton.onclick = () => {
+        UniqueNameElement.textContent = generateName();
+    }
+
+    UniqueNameElement.addEventListener(
+        'click',
+        async () => {
+            await navigator.clipboard.writeText(UniqueNameElement.textContent)
+        }
+    )
+
+    GenerateButton.click();
+</script>
+</body>
+</html>
