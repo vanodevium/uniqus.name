@@ -1,95 +1,162 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Unique name generator | uniqus.name</title>
     <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
-    >
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
     <style>
-        * {
-            touch-action: manipulation;
-        }
+      * {
+        touch-action: manipulation;
+      }
 
-        html {
-            overflow: hidden;
-        }
+      html {
+        overflow: hidden;
+      }
 
-        html, body, .container {
-            height: 100%;
-        }
+      html,
+      body,
+      .container {
+        height: 100%;
+      }
 
+      #unique-name {
+        font-size: 48px;
+        white-space: nowrap;
+      }
+
+      .section-footer {
+        padding: 3rem 1.5rem 6rem;
+      }
+
+      @media only screen and (max-width: 600px) {
         #unique-name {
-            font-size: 48px;
-            white-space: nowrap;
+          font-size: 32px;
         }
-
-        .section-footer {
-            padding: 3rem 1.5rem 6rem;
-        }
-
-        @media only screen and (max-width: 600px) {
-            #unique-name {
-                font-size: 32px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-<div class="container is-flex is-flex-direction-column is-justify-content-space-between">
-    <section class="has-text-centered is-flex is-align-items-center is-justify-content-center m-auto">
+  </head>
+  <body>
+    <div
+      class="container is-flex is-flex-direction-column is-justify-content-space-between"
+    >
+      <section
+        class="has-text-centered is-flex is-align-items-center is-justify-content-center m-auto"
+      >
         <div>
-            <p id="unique-name" class="title is-clickable is-unselectable"></p>
-            <br />
-            <p class="subtitle">Click on text to copy</p>
+          <p id="unique-name" class="title is-clickable is-unselectable"></p>
+          <br />
+          <p class="subtitle">Click on text to copy</p>
         </div>
-    </section>
-    <section class="section section-footer">
-        <div class="content has-text-centered">
-            <div class="control">
-                <button id="generate" class="button is-link is-large">Generate</button>
+      </section>
+      <section
+        class="section-footer is-flex is-align-items-center is-justify-content-center is-column-gap-2"
+      >
+        <div>
+          <label class="label">
+            <span class="mr-4 is-size-4">Words count:</span>
+            <div class="select">
+              <select name="words-count" id="words-count">
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
             </div>
+          </label>
         </div>
-    </section>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/es-module-shims@latest/dist/es-module-shims.min.js"></script>
-<script type="importmap">
-    {
+        <div>
+          <div class="control">
+            <button id="generate" class="button is-link is-large">
+              Generate
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="label">
+            <span class="mr-4 is-size-4">Words separator:</span>
+            <div class="select">
+              <select name="words-separator" id="words-separator">
+                <option value="-">-</option>
+                <option value="_">_</option>
+              </select>
+            </div>
+          </label>
+        </div>
+      </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/es-module-shims@latest/dist/es-module-shims.min.js"></script>
+    <script type="importmap">
+      {
         "imports": {
-            "unique-names-generator": "https://cdn.jsdelivr.net/npm/unique-names-generator@latest/dist/index.m.js"
+          "unique-names-generator": "https://cdn.jsdelivr.net/npm/unique-names-generator@latest/dist/index.m.js"
         }
-    }
-</script>
-<script type="module">
-    import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+      }
+    </script>
+    <script type="module">
+      import {
+        uniqueNamesGenerator,
+        adjectives,
+        colors,
+        animals,
+      } from "unique-names-generator";
 
-    const generateName = (len = 2, separator = '-') => {
+      const generateName = (len = 2, separator = "-") => {
+        let dictionaries = [adjectives, animals];
+        if (+len === 3) {
+          dictionaries = [adjectives, colors, animals];
+        }
         return uniqueNamesGenerator({
-            dictionaries: [adjectives, /*colors,*/ animals],
-            separator: separator,
-            length: len,
-        })
-    }
+          dictionaries: dictionaries,
+          separator: separator,
+          length: len,
+        });
+      };
 
-    const UniqueNameElement = document.getElementById('unique-name');
-    const GenerateButton = document.getElementById('generate');
+      const UniqueNameElement = document.getElementById("unique-name");
+      const GenerateButton = document.getElementById("generate");
+      const WordsCountElement = document.getElementById("words-count");
+      const WordsSeparatorElement = document.getElementById("words-separator");
 
-    GenerateButton.onclick = () => {
-        UniqueNameElement.textContent = generateName();
-    }
+      const callGenerateName = () => {
+        UniqueNameElement.textContent = generateName(
+          localStorage.getItem("words-count") || 2,
+          localStorage.getItem("words-separator") || "-",
+        ).toLowerCase();
+      };
 
-    UniqueNameElement.addEventListener(
-        'click',
-        async () => {
-            await navigator.clipboard.writeText(UniqueNameElement.textContent)
-        }
-    )
+      if (localStorage.getItem("words-count")) {
+        WordsCountElement.value = localStorage.getItem("words-count");
+      }
 
-    GenerateButton.click();
-</script>
-</body>
+      if (localStorage.getItem("words-count")) {
+        WordsSeparatorElement.value = localStorage.getItem("words-separator");
+      }
+
+      WordsCountElement.onchange = (e) => {
+        localStorage.setItem("words-count", e.currentTarget.value);
+        callGenerateName();
+      };
+
+      WordsSeparatorElement.onchange = (e) => {
+        localStorage.setItem("words-separator", e.currentTarget.value);
+        callGenerateName();
+      };
+
+      GenerateButton.onclick = () => {
+        callGenerateName();
+      };
+
+      UniqueNameElement.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(UniqueNameElement.textContent);
+      });
+
+      GenerateButton.click();
+    </script>
+  </body>
 </html>
