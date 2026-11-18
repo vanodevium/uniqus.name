@@ -1,0 +1,19 @@
+{
+  "name": "uniqus.name",
+  "private": true,
+  "version": "0.0.2",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "4.3.5",
+    "tailwindcss": "4.3.5",
+    "unique-names-generator": "4.7.1"
+  },
+  "devDependencies": {
+    "vite": "8.3.8"
+  }
+}
